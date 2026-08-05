@@ -64,12 +64,6 @@ export function WelcomeScreen({ preset, onPreset, onStart, error, ready }: Props
               {w}
             </span>
           ))}
-          <span
-            className="animate-word inline-block text-leopard-cream"
-            style={{ animationDelay: "1260ms" }}
-          >
-            @
-          </span>
         </p>
 
         <p className="mt-4 text-[11px] tracking-[0.3em] text-film-sepia/70 uppercase sm:text-sm">

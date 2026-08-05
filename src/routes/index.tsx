@@ -76,7 +76,7 @@ function Booth() {
 
   return (
     <main className="relative min-h-screen touch-manipulation overflow-x-hidden bg-background">
-      <LeopardBackground opacity={screen === "welcome" ? 0.18 : 0.06} />
+      <LeopardBackground opacity={screen === "welcome" ? 0.9 : 0.35} />
 
 
       {screen === "welcome" && (
