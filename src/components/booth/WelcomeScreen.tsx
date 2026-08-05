@@ -73,13 +73,14 @@ export function WelcomeScreen({ preset, onPreset, onStart, error, ready }: Props
 
       <section className="w-full">
         <p className="mb-3 text-xs tracking-[0.35em] text-leopard-tan uppercase">presets</p>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0">
           {PRESETS.map((p) => (
             <button
               key={p.id}
               type="button"
+              aria-pressed={preset === p.id}
               onClick={() => onPreset(p.id)}
-              className={`touch-manipulation rounded-2xl border p-5 text-left transition-all active:scale-[0.97] ${
+              className={`min-h-[11rem] w-[72vw] max-w-xs shrink-0 snap-center touch-manipulation select-none rounded-2xl border p-5 text-left transition-all active:scale-[0.97] sm:w-auto sm:max-w-none ${
                 preset === p.id
                   ? "border-leopard-tan bg-surface shadow-[0_0_0_1px_var(--leopard-tan),0_0_28px_-6px_var(--leopard-tan),0_18px_40px_-24px_#000]"
                   : "border-border bg-surface/50 hover:border-leopard-tan/60 hover:shadow-[0_0_22px_-8px_var(--leopard-tan)]"
@@ -98,6 +99,7 @@ export function WelcomeScreen({ preset, onPreset, onStart, error, ready }: Props
             </button>
           ))}
         </div>
+
       </section>
 
       {error && (
