@@ -113,7 +113,7 @@ export function WelcomeScreen({ preset, onPreset, onStart, error, ready }: Props
         onClick={onStart}
         className="animate-backlit touch-manipulation rounded-full bg-leopard-tan px-10 py-4 font-display text-xl text-ink transition-transform active:scale-95 sm:px-12 sm:text-2xl"
       >
-        {ready ? "let's go ✦" : "allow camera ✦"}
+        {ready ? "snap ✦" : "allow camera ✦"}
       </button>
     </div>
   );
