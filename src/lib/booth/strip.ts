@@ -1,7 +1,7 @@
 import {
   bow,
   filmStrip,
-  leopardDataUrl,
+  leopardPattern,
   lips,
   loadSvg,
   makeRng,
@@ -52,7 +52,7 @@ export async function composeStrip(
   ctx.fillRect(0, 0, STRIP_W, STRIP_H);
 
   // leopard texture at 30% opacity behind the strip
-  const leo = await loadSvg(decodeURIComponent(leopardDataUrl().split("utf8,")[1]!));
+  const leo = await loadSvg(leopardPattern());
   const pat = ctx.createPattern(leo, "repeat");
   if (pat) {
     ctx.save();
