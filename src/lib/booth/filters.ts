@@ -27,7 +27,7 @@ export const PRESETS: {
 ];
 
 export const presetCss = (id: PresetId) =>
-  PRESETS.find((p) => p.id === id)?.css ?? PRESETS[0].css;
+  PRESETS.find((p) => p.id === id)?.css ?? PRESETS[0]!.css;
 
 /** Draws the video frame into a canvas with the full filter pipeline applied. */
 export function renderFrame(
@@ -83,12 +83,13 @@ export function renderFrame(
   // vintage flash burn at the corners
   ctx.save();
   ctx.globalCompositeOperation = "lighten";
-  for (const [cx, cy] of [
+  const corners: [number, number][] = [
     [0, 0],
     [w, 0],
     [0, h],
     [w, h],
-  ]) {
+  ];
+  for (const [cx, cy] of corners) {
     const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.45);
     g.addColorStop(0, "rgba(255,240,245,0.14)");
     g.addColorStop(1, "rgba(255,240,245,0)");
@@ -110,9 +111,9 @@ export function renderFrame(
   const d = img.data;
   for (let i = 0; i < d.length; i += 4) {
     const n = (Math.random() - 0.5) * 255 * amount;
-    d[i] += n;
-    d[i + 1] += n;
-    d[i + 2] += n;
+    d[i] = (d[i] ?? 0) + n;
+    d[i + 1] = (d[i + 1] ?? 0) + n;
+    d[i + 2] = (d[i + 2] ?? 0) + n;
   }
   ctx.putImageData(img, 0, 0);
 
