@@ -36,9 +36,39 @@ function Sticker({
 const WORDS = ["ready", "set", "shoot"];
 
 export function WelcomeScreen({ preset, onPreset, onStart, error, ready }: Props) {
+  const [wave, setWave] = useState({ x: 0, y: 0 });
+  const [active, setActive] = useState(false);
+  const idle = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    setWave({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+    return () => {
+      if (idle.current) clearTimeout(idle.current);
+    };
+  }, []);
+
+  const track = (clientX: number, clientY: number) => {
+    setWave({ x: clientX, y: clientY });
+    setActive(true);
+    if (idle.current) clearTimeout(idle.current);
+    idle.current = setTimeout(() => setActive(false), 700);
+  };
+
   return (
-    <div className="relative mx-auto flex min-h-screen w-full max-w-4xl flex-col items-center justify-center gap-8 px-5 py-14 sm:gap-10 sm:px-8">
+    <div
+      className="relative mx-auto flex min-h-screen w-full max-w-4xl flex-col items-center justify-center gap-8 px-5 py-14 sm:gap-10 sm:px-8"
+      onPointerMove={(e) => track(e.clientX, e.clientY)}
+      onPointerDown={(e) => track(e.clientX, e.clientY)}
+      onTouchMove={(e) => {
+        const t = e.touches[0];
+        if (t) track(t.clientX, t.clientY);
+      }}
+      onPointerLeave={() => setActive(false)}
+    >
+      <GridWave x={wave.x} y={wave.y} active={active} />
+
       {/* funky sticker scatter */}
+
       <Sticker svg={star("#E7C46B")} className="left-2 top-10 h-12 w-12 sm:h-16 sm:w-16" />
       <Sticker svg={star("#D9D9E0")} className="right-6 top-24 h-8 w-8" delay={600} />
       <Sticker svg={pearlHeart} className="right-2 top-6 h-14 w-14" delay={300} />
