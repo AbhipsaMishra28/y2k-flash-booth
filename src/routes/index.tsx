@@ -32,6 +32,7 @@ function Booth() {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [frames, setFrames] = useState<HTMLCanvasElement[]>([]);
+  const [session, setSession] = useState(0);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -91,6 +92,7 @@ function Booth() {
 
       {screen === "viewfinder" && stream && (
         <ViewfinderScreen
+          key={session}
           stream={stream}
           preset={preset}
           flash={flash}
@@ -108,6 +110,7 @@ function Booth() {
           toast={toast}
           onRestart={() => {
             setFrames([]);
+            setSession((n) => n + 1);
             setScreen("viewfinder");
           }}
         />

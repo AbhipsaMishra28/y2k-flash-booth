@@ -8,7 +8,8 @@ type Props = {
 };
 
 export function StripPreview({ frames, onRestart, toast }: Props) {
-  const canvasRef = useRef<HTMLCanvasElement>(document.createElement("canvas"));
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const getCanvas = () => (canvasRef.current ??= document.createElement("canvas"));
   const [message, setMessage] = useState("");
   const [handle, setHandle] = useState("");
   const [src, setSrc] = useState<string | null>(null);
@@ -18,8 +19,8 @@ export function StripPreview({ frames, onRestart, toast }: Props) {
     let cancelled = false;
     const t = setTimeout(async () => {
       if (document.fonts?.ready) await document.fonts.ready;
-      await composeStrip(canvasRef.current, { frames, message, handle, seed });
-      if (!cancelled) setSrc(canvasRef.current.toDataURL("image/png"));
+      await composeStrip(getCanvas(), { frames, message, handle, seed });
+      if (!cancelled) setSrc(getCanvas().toDataURL("image/png"));
     }, 300);
     return () => {
       cancelled = true;
@@ -29,7 +30,7 @@ export function StripPreview({ frames, onRestart, toast }: Props) {
 
   const blob = () =>
     new Promise<Blob>((resolve, reject) =>
-      canvasRef.current.toBlob((b) => (b ? resolve(b) : reject(new Error("no blob"))), "image/png"),
+      getCanvas().toBlob((b) => (b ? resolve(b) : reject(new Error("no blob"))), "image/png"),
     );
 
   const filename = `they2kbooth-${Date.now()}.png`;
@@ -60,7 +61,7 @@ export function StripPreview({ frames, onRestart, toast }: Props) {
       }
     }
     try {
-      await navigator.clipboard.writeText(canvasRef.current.toDataURL("image/png"));
+      await navigator.clipboard.writeText(getCanvas().toDataURL("image/png"));
       toast("copied ✦");
     } catch {
       download(b);
