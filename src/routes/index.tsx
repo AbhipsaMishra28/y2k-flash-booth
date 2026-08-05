@@ -28,7 +28,7 @@ type Screen = "welcome" | "viewfinder" | "strip";
 function Booth() {
   const [screen, setScreen] = useState<Screen>("welcome");
   const [preset, setPreset] = useState<PresetId>("y2k");
-  const [flash, setFlash] = useState(true);
+  const flash = true;
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [frames, setFrames] = useState<HTMLCanvasElement[]>([]);
