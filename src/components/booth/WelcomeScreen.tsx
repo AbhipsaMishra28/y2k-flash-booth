@@ -1,5 +1,8 @@
+import { useEffect, useRef, useState } from "react";
+import { GridWave } from "@/components/booth/GridWave";
 import { PRESETS, type PresetId } from "@/lib/booth/filters";
 import { bow, filmStrip, lips, pearlHeart, star } from "@/lib/booth/stickers";
+
 
 type Props = {
   preset: PresetId;
