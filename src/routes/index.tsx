@@ -28,7 +28,7 @@ type Screen = "welcome" | "viewfinder" | "strip";
 function Booth() {
   const [screen, setScreen] = useState<Screen>("welcome");
   const [preset, setPreset] = useState<PresetId>("y2k");
-  const [flash, setFlash] = useState(true);
+  const flash = true;
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [frames, setFrames] = useState<HTMLCanvasElement[]>([]);
@@ -75,20 +75,20 @@ function Booth() {
   };
 
   return (
-    <main className="relative min-h-screen min-w-[1024px] overflow-x-auto bg-background">
-      <LeopardBackground />
+    <main className="relative min-h-screen touch-manipulation overflow-x-hidden bg-background">
+      <LeopardBackground opacity={screen === "welcome" ? 0.18 : 0.06} />
+
 
       {screen === "welcome" && (
         <WelcomeScreen
           preset={preset}
           onPreset={setPreset}
-          flash={flash}
-          onFlash={setFlash}
           onStart={start}
           error={error}
           ready={!!stream}
         />
       )}
+
 
       {screen === "viewfinder" && stream && (
         <ViewfinderScreen

@@ -1,48 +1,94 @@
 import { PRESETS, type PresetId } from "@/lib/booth/filters";
+import { bow, filmStrip, lips, pearlHeart, star } from "@/lib/booth/stickers";
 
 type Props = {
   preset: PresetId;
   onPreset: (p: PresetId) => void;
-  flash: boolean;
-  onFlash: (f: boolean) => void;
   onStart: () => void;
   error: string | null;
   ready: boolean;
 };
 
-export function WelcomeScreen({
-  preset,
-  onPreset,
-  flash,
-  onFlash,
-  onStart,
-  error,
-  ready,
-}: Props) {
+const svgUrl = (svg: string) =>
+  `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
+
+function Sticker({
+  svg,
+  className,
+  delay = 0,
+}: {
+  svg: string;
+  className: string;
+  delay?: number;
+}) {
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-4xl flex-col items-center justify-center gap-10 px-8 py-16">
+    <span
+      aria-hidden
+      className={`pointer-events-none absolute animate-float bg-contain bg-center bg-no-repeat drop-shadow-[0_0_18px_rgba(201,169,110,0.45)] ${className}`}
+      style={{ backgroundImage: svgUrl(svg), animationDelay: `${delay}ms` }}
+    />
+  );
+}
+
+const WORDS = ["ready", "set", "shoot"];
+
+export function WelcomeScreen({ preset, onPreset, onStart, error, ready }: Props) {
+  return (
+    <div className="relative mx-auto flex min-h-screen w-full max-w-4xl flex-col items-center justify-center gap-8 px-5 py-14 sm:gap-10 sm:px-8">
+      {/* funky sticker scatter */}
+      <Sticker svg={star("#E7C46B")} className="left-2 top-10 h-12 w-12 sm:h-16 sm:w-16" />
+      <Sticker svg={star("#D9D9E0")} className="right-6 top-24 h-8 w-8" delay={600} />
+      <Sticker svg={pearlHeart} className="right-2 top-6 h-14 w-14" delay={300} />
+      <Sticker svg={bow} className="-left-1 bottom-28 h-16 w-24" delay={900} />
+      <Sticker svg={lips} className="right-4 bottom-40 h-12 w-16" delay={1200} />
+      <Sticker
+        svg={filmStrip}
+        className="left-0 top-1/3 hidden h-64 w-8 opacity-70 sm:block"
+        delay={200}
+      />
+      <Sticker svg={star("#E7C46B")} className="bottom-10 left-1/4 h-7 w-7" delay={1500} />
+
       <header className="text-center">
-        <h1 className="font-display text-6xl tracking-tight text-leopard-cream">
-          THE<span className="text-leopard-tan">y2K</span>booth<span className="text-muted-sage">.</span>
+        <h1 className="font-display text-4xl tracking-tight text-leopard-cream sm:text-6xl">
+          THE<span className="text-leopard-tan">y2K</span>booth
+          <span className="text-muted-sage">.</span>
         </h1>
-        <p className="mt-3 text-sm tracking-[0.3em] text-film-sepia/70 uppercase">
+
+        <p className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 font-display text-3xl italic text-leopard-tan sm:text-5xl">
+          {WORDS.map((w, i) => (
+            <span
+              key={w}
+              className="animate-word inline-block drop-shadow-[0_0_22px_rgba(201,169,110,0.55)]"
+              style={{ animationDelay: `${i * 420}ms` }}
+            >
+              {w}
+            </span>
+          ))}
+          <span
+            className="animate-word inline-block text-leopard-cream"
+            style={{ animationDelay: "1260ms" }}
+          >
+            @
+          </span>
+        </p>
+
+        <p className="mt-4 text-[11px] tracking-[0.3em] text-film-sepia/70 uppercase sm:text-sm">
           four shots · one strip · zero chill
         </p>
       </header>
 
       <section className="w-full">
-        <p className="mb-3 text-xs tracking-[0.25em] text-leopard-tan uppercase">
-          pick your look
-        </p>
-        <div className="grid grid-cols-3 gap-4">
+        <p className="mb-3 text-xs tracking-[0.35em] text-leopard-tan uppercase">presets</p>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           {PRESETS.map((p) => (
             <button
               key={p.id}
+              type="button"
               onClick={() => onPreset(p.id)}
-              className={`rounded-2xl border p-5 text-left transition-all ${
+              className={`touch-manipulation rounded-2xl border p-5 text-left transition-all active:scale-[0.97] ${
                 preset === p.id
-                  ? "border-leopard-tan bg-surface shadow-[0_0_0_1px_var(--leopard-tan),0_18px_40px_-24px_#000]"
-                  : "border-border bg-surface/50 hover:border-leopard-tan/60"
+                  ? "border-leopard-tan bg-surface shadow-[0_0_0_1px_var(--leopard-tan),0_0_28px_-6px_var(--leopard-tan),0_18px_40px_-24px_#000]"
+                  : "border-border bg-surface/50 hover:border-leopard-tan/60 hover:shadow-[0_0_22px_-8px_var(--leopard-tan)]"
               }`}
             >
               <div
@@ -60,42 +106,16 @@ export function WelcomeScreen({
         </div>
       </section>
 
-      <section className="w-full rounded-2xl border border-border bg-surface/60 p-6">
-        <p className="font-display text-xl text-leopard-cream">turn flash on?</p>
-        <div className="mt-4 flex gap-3">
-          <button
-            onClick={() => onFlash(true)}
-            className={`rounded-full px-5 py-2 text-sm transition-colors ${
-              flash
-                ? "bg-leopard-tan text-ink"
-                : "border border-border text-film-sepia hover:border-leopard-tan/60"
-            }`}
-          >
-            ☀ yes, flash me
-          </button>
-          <button
-            onClick={() => onFlash(false)}
-            className={`rounded-full px-5 py-2 text-sm transition-colors ${
-              !flash
-                ? "bg-leopard-tan text-ink"
-                : "border border-border text-film-sepia hover:border-leopard-tan/60"
-            }`}
-          >
-            ✦ no thanks
-          </button>
-        </div>
-        <p className="mt-3 text-[11px] text-film-sepia/60">
-          flash is screen-simulated on desktop ✦
-        </p>
-      </section>
-
       {error && (
-        <p className="text-sm text-destructive">camera shy? check your permissions and try again ✦</p>
+        <p className="text-sm text-destructive">
+          camera shy? check your permissions and try again ✦
+        </p>
       )}
 
       <button
+        type="button"
         onClick={onStart}
-        className="rounded-full bg-leopard-tan px-12 py-4 font-display text-2xl text-ink transition-transform hover:scale-105"
+        className="animate-backlit touch-manipulation rounded-full bg-leopard-tan px-10 py-4 font-display text-xl text-ink transition-transform active:scale-95 sm:px-12 sm:text-2xl"
       >
         {ready ? "let's go ✦" : "allow camera ✦"}
       </button>
