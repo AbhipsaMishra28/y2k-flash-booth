@@ -18,7 +18,13 @@ export function StripPreview({ frames, onRestart, toast }: Props) {
   useEffect(() => {
     let cancelled = false;
     const t = setTimeout(async () => {
-      if (document.fonts?.ready) await document.fonts.ready;
+      if (document.fonts) {
+        await Promise.all([
+          document.fonts.load('44px "Great Vibes"'),
+          document.fonts.load('28px "Courier Prime"'),
+        ]).catch(() => {});
+        await document.fonts.ready;
+      }
       await composeStrip(getCanvas(), { frames, message, handle, seed });
       if (!cancelled) setSrc(getCanvas().toDataURL("image/png"));
     }, 300);
